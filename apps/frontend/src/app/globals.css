@@ -1,0 +1,38 @@
+@import "tailwindcss";
+
+:root {
+  --background: 197 67% 98%;
+  --foreground: 213 36% 14%;
+  --muted: 200 27% 94%;
+  --muted-foreground: 213 15% 38%;
+  --border: 200 28% 87%;
+  --input: 200 28% 87%;
+  --ring: 197 93% 45%;
+  --primary: 199 89% 42%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 193 60% 92%;
+  --secondary-foreground: 213 36% 14%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 0 0% 98%;
+  --accent: 188 64% 90%;
+  --accent-foreground: 213 36% 14%;
+  --card: 0 0% 100%;
+  --card-foreground: 213 36% 14%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 213 36% 14%;
+  --radius: 0.75rem;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background:
+    radial-gradient(circle at 95% 0%, hsl(199 88% 70% / 0.18), transparent 35%),
+    radial-gradient(circle at 0% 100%, hsl(174 70% 62% / 0.16), transparent 45%),
+    hsl(var(--background));
+  color: hsl(var(--foreground));
+}
+

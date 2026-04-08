@@ -1,0 +1,307 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserStatus {
+  ACTIVE
+  DISABLED
+}
+
+enum AppointmentStatus {
+  SCHEDULED
+  CHECKED_IN
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+model User {
+  id           String     @id @default(cuid())
+  email        String     @unique
+  name         String
+  passwordHash String
+  status       UserStatus @default(ACTIVE)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  roles     UserRole[]
+  auditLogs AuditLog[] @relation("AuditActor")
+  files     FileObject[] @relation("FileUploader")
+}
+
+model Role {
+  id          String  @id @default(cuid())
+  key         String  @unique
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  users       UserRole[]
+  permissions RolePermission[]
+}
+
+model Permission {
+  id          String  @id @default(cuid())
+  key         String  @unique
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  roles RolePermission[]
+}
+
+model UserRole {
+  userId String
+  roleId String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@id([userId, roleId])
+}
+
+model RolePermission {
+  roleId String
+  permissionId String
+  createdAt DateTime @default(now())
+
+  role Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, permissionId])
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  action    String
+  entity    String
+  entityId  String?
+  metadata  Json?
+  ip        String?
+  userAgent String?
+  createdAt DateTime @default(now())
+
+  actorId String?
+  actor   User? @relation("AuditActor", fields: [actorId], references: [id], onDelete: SetNull)
+}
+
+model Patient {
+  id        String   @id @default(cuid())
+  mrn       String   @unique
+  name      String
+  phone     String?
+  address   String?
+  birthDate DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  visits Visit[]
+  appointments Appointment[]
+  queueEntries QueueEntry[]
+}
+
+model Doctor {
+  id          String   @id @default(cuid())
+  code        String   @unique
+  name        String
+  specialty   String?
+  phone       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  appointments Appointment[]
+  visits Visit[]
+  queueEntries QueueEntry[]
+  laboratoryOrders LaboratoryOrder[]
+  radiologyOrders RadiologyOrder[]
+}
+
+model Appointment {
+  id         String            @id @default(cuid())
+  scheduledAt DateTime
+  status     AppointmentStatus @default(SCHEDULED)
+  notes      String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  patientId String
+  doctorId  String
+  patient Patient @relation(fields: [patientId], references: [id], onDelete: Restrict)
+  doctor  Doctor  @relation(fields: [doctorId], references: [id], onDelete: Restrict)
+
+  visit Visit?
+}
+
+model QueueEntry {
+  id        String   @id @default(cuid())
+  number    Int
+  date      DateTime
+  status    String   @default("WAITING")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  patientId String
+  doctorId  String?
+  patient Patient @relation(fields: [patientId], references: [id], onDelete: Restrict)
+  doctor  Doctor?  @relation(fields: [doctorId], references: [id], onDelete: SetNull)
+
+  @@index([date])
+}
+
+model Visit {
+  id        String   @id @default(cuid())
+  startedAt DateTime @default(now())
+  endedAt   DateTime?
+  complaint String?
+  diagnosis String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  patientId String
+  doctorId  String
+  appointmentId String? @unique
+
+  patient Patient @relation(fields: [patientId], references: [id], onDelete: Restrict)
+  doctor  Doctor  @relation(fields: [doctorId], references: [id], onDelete: Restrict)
+  appointment Appointment? @relation(fields: [appointmentId], references: [id], onDelete: SetNull)
+
+  invoice BillingInvoice?
+  laboratoryOrders LaboratoryOrder[]
+  radiologyOrders RadiologyOrder[]
+}
+
+model LaboratoryOrder {
+  id        String   @id @default(cuid())
+  testType  String
+  notes     String?
+  status    String   @default("MENUNGGU")
+  orderedAt DateTime @default(now())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  visitId  String
+  doctorId String
+  visit  Visit   @relation(fields: [visitId], references: [id], onDelete: Restrict)
+  doctor Doctor @relation(fields: [doctorId], references: [id], onDelete: Restrict)
+
+  results LaboratoryResult[]
+
+  @@index([visitId])
+  @@index([doctorId])
+  @@index([status])
+}
+
+model LaboratoryResult {
+  id          String   @id @default(cuid())
+  parameter   String
+  value       String
+  unit        String?
+  normalRange String?
+  notes       String?
+  resultedAt  DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  orderId String
+  order LaboratoryOrder @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+}
+
+model RadiologyOrder {
+  id        String   @id @default(cuid())
+  examType  String
+  notes     String?
+  status    String   @default("MENUNGGU")
+  orderedAt DateTime @default(now())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  visitId  String
+  doctorId String
+  visit  Visit   @relation(fields: [visitId], references: [id], onDelete: Restrict)
+  doctor Doctor @relation(fields: [doctorId], references: [id], onDelete: Restrict)
+
+  results RadiologyResult[]
+
+  @@index([visitId])
+  @@index([doctorId])
+  @@index([status])
+}
+
+model RadiologyResult {
+  id          String   @id @default(cuid())
+  description String
+  impression  String?
+  filePath    String?
+  resultedAt  DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  orderId String
+  order RadiologyOrder @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+}
+
+model Medicine {
+  id        String   @id @default(cuid())
+  sku       String   @unique
+  name      String
+  unit      String   @default("tablet")
+  stock     Int      @default(0)
+  price     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model BillingInvoice {
+  id        String   @id @default(cuid())
+  number    String   @unique
+  status    String   @default("UNPAID")
+  total     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  visitId String @unique
+  visit Visit @relation(fields: [visitId], references: [id], onDelete: Cascade)
+
+  items BillingItem[]
+}
+
+model BillingItem {
+  id        String   @id @default(cuid())
+  name      String
+  qty       Int      @default(1)
+  price     Int      @default(0)
+  subtotal  Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  invoiceId String
+  invoice BillingInvoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+}
+
+model FileObject {
+  id        String   @id @default(cuid())
+  bucket    String
+  objectKey String
+  filename  String
+  mimeType  String
+  size      Int
+  createdAt DateTime @default(now())
+
+  uploaderId String?
+  uploader User? @relation("FileUploader", fields: [uploaderId], references: [id], onDelete: SetNull)
+
+  @@index([bucket, objectKey])
+}
+
