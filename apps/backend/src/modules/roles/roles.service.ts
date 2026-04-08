@@ -24,7 +24,7 @@ export class RolesService {
     const perms = await this.prisma.permission.findMany({ where: { key: { in: permissionKeys } } });
     await this.prisma.rolePermission.deleteMany({ where: { roleId } });
     await this.prisma.rolePermission.createMany({
-      data: perms.map((p) => ({ roleId, permissionId: p.id })),
+      data: perms.map((p: any) => ({ roleId, permissionId: p.id })),
       skipDuplicates: true
     });
 

@@ -58,7 +58,7 @@ export default function QueuesPage() {
 
   const doctors = useQuery({
     queryKey: ["queues", "doctors-options"],
-    queryFn: () => listDoctors({ page: 1, limit: 200 })
+    queryFn: () => listDoctors({ page: 1, limit: 100 })
   });
 
   const form = useForm<QueueFormValues>({

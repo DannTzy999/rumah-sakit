@@ -48,9 +48,9 @@ export class AuthService {
     if (!user) throw new UnauthorizedException("Invalid token");
     if (user.status !== "ACTIVE") throw new UnauthorizedException("User disabled");
 
-    const roles = user.roles.map((r) => r.role.key);
+    const roles = user.roles.map((r: any) => r.role.key);
     const permissions = Array.from(
-      new Set(user.roles.flatMap((r) => r.role.permissions.map((rp) => rp.permission.key)))
+      new Set(user.roles.flatMap((r: any) => r.role.permissions.map((rp: any) => rp.permission.key)))
     );
 
     return {
@@ -108,7 +108,7 @@ export class AuthService {
 
     const passwordHash = await bcrypt.hash(input.password, 12);
 
-    const result = await this.prisma.$transaction(async (tx) => {
+    const result = await this.prisma.$transaction(async (tx: any) => {
       const user = await tx.user.create({
         data: {
           email: input.email,

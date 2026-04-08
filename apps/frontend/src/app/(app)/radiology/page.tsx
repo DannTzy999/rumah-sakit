@@ -80,7 +80,7 @@ export default function RadiologyPage() {
 
   const doctors = useQuery({
     queryKey: ["radiology", "doctor-options"],
-    queryFn: () => listDoctors({ page: 1, limit: 200 })
+    queryFn: () => listDoctors({ page: 1, limit: 100 })
   });
 
   const createOrderForm = useForm<CreateOrderValues>({

@@ -39,7 +39,7 @@ export class AuditLogsService {
         actorId: input.actorId,
         ip: input.ip,
         userAgent: input.userAgent,
-        metadata: input.metadata as Prisma.InputJsonValue | undefined
+        metadata: input.metadata as any
       }
     });
   }

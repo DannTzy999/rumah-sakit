@@ -82,7 +82,7 @@ export default function LaboratoryPage() {
 
   const doctors = useQuery({
     queryKey: ["laboratory", "doctor-options"],
-    queryFn: () => listDoctors({ page: 1, limit: 200 })
+    queryFn: () => listDoctors({ page: 1, limit: 100 })
   });
 
   const createOrderForm = useForm<CreateOrderValues>({

@@ -32,7 +32,7 @@ export class BillingService {
 
   async list(query: PaginationQueryDto) {
     const { skip, take, page, limit } = toSkipTake(query.page, query.limit);
-    const where: Prisma.BillingInvoiceWhereInput | undefined = query.q
+    const where: any = query.q
       ? {
           OR: [
             { number: { contains: query.q, mode: "insensitive" as const } },
@@ -69,7 +69,7 @@ export class BillingService {
   async listMine(userId: string, query: PaginationQueryDto) {
     await this.ensurePatientProfile(userId);
     const { skip, take, page, limit } = toSkipTake(query.page, query.limit);
-    const where: Prisma.BillingInvoiceWhereInput = query.q
+    const where: any = query.q
       ? {
           visit: { patientId: userId },
           OR: [

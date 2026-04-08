@@ -26,10 +26,11 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     if (exception instanceof HttpException) {
       status = exception.getStatus();
       message = normalizeMessage(exception.getResponse(), exception.message);
-    } else if (exception instanceof Prisma.PrismaClientKnownRequestError) {
+    } else if (exception instanceof Error && "code" in exception) {
       status = HttpStatus.BAD_REQUEST;
-      if (exception.code === "P2002") message = "Unique constraint failed";
-      else if (exception.code === "P2025") message = "Record not found";
+      const code = (exception as any).code;
+      if (code === "P2002") message = "Unique constraint failed";
+      else if (code === "P2025") message = "Record not found";
       else message = exception.message;
     } else if (exception instanceof Error) {
       message = exception.message;

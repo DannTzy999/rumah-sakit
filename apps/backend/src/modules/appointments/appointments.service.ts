@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
-import { AppointmentStatus, Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 
 import { PaginationQueryDto, toSkipTake } from "../../common/pagination/pagination";
 import { PrismaService } from "../../shared/prisma/prisma.service";
@@ -31,7 +31,7 @@ export class AppointmentsService {
 
   async list(query: PaginationQueryDto) {
     const { skip, take, page, limit } = toSkipTake(query.page, query.limit);
-    const where: Prisma.AppointmentWhereInput = query.q
+    const where: any = query.q
       ? {
           OR: [
             { patient: { name: { contains: query.q, mode: "insensitive" as const } } },
@@ -59,7 +59,7 @@ export class AppointmentsService {
   async listMine(userId: string, query: PaginationQueryDto) {
     await this.ensurePatientProfile(userId);
     const { skip, take, page, limit } = toSkipTake(query.page, query.limit);
-    const where: Prisma.AppointmentWhereInput = query.q
+    const where: any = query.q
       ? {
           patientId: userId,
           OR: [

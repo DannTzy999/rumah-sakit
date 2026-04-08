@@ -19,7 +19,7 @@ export class FilesService {
 
   async list(query: PaginationQueryDto) {
     const { skip, take, page, limit } = toSkipTake(query.page, query.limit);
-    const where: Prisma.FileObjectWhereInput | undefined = query.q
+    const where: any = query.q
       ? {
           OR: [
             { filename: { contains: query.q, mode: "insensitive" as const } },

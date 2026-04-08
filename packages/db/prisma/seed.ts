@@ -121,7 +121,7 @@ const ROLE_SEEDS: RoleSeed[] = [
     key: "patient",
     name: "Patient",
     description: "Portal pasien",
-    permissionKeys: ["patients.read", "appointments.read", "visits.read", "billing.read"]
+    permissionKeys: ["patients.read", "doctors.read", "appointments.read", "appointments.write", "visits.read", "billing.read"]
   }
 ];
 

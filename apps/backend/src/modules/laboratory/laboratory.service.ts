@@ -40,7 +40,7 @@ export class LaboratoryService {
 
   async list(query: PaginationQueryDto) {
     const { skip, take, page, limit } = toSkipTake(query.page, query.limit);
-    const where: Prisma.LaboratoryOrderWhereInput = query.q
+    const where: any = query.q
       ? {
           OR: [
             { testType: { contains: query.q, mode: "insensitive" as const } },

@@ -51,7 +51,7 @@ export default function AppointmentsPage() {
   });
   const doctors = useQuery({
     queryKey: ["appointments", "doctors-options"],
-    queryFn: () => listDoctors({ page: 1, limit: 200 })
+    queryFn: () => listDoctors({ page: 1, limit: 100 })
   });
 
   const form = useForm<AppointmentFormValues>({

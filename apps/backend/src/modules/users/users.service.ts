@@ -1,5 +1,4 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { UserStatus } from "@prisma/client";
 import bcrypt from "bcrypt";
 
 import { PrismaService } from "../../shared/prisma/prisma.service";
@@ -12,7 +11,7 @@ type UserListItem = {
   id: string;
   email: string;
   name: string;
-  status: UserStatus;
+  status: string;
   createdAt: Date;
   updatedAt: Date;
   roles: { role: { id: string; key: string; name: string } }[];
@@ -66,7 +65,7 @@ export class UsersService {
         roles: { select: { role: { select: { id: true, key: true, name: true } } } }
       }
     });
-    return users.map((user) => this.toPublicUser(user));
+    return users.map((user: any) => this.toPublicUser(user));
   }
 
   async create(actorId: string | undefined, input: CreateUserDto) {
@@ -78,7 +77,7 @@ export class UsersService {
     if (input.roleKeys?.length) {
       const roles = await this.prisma.role.findMany({ where: { key: { in: input.roleKeys } } });
       await this.prisma.userRole.createMany({
-        data: roles.map((r) => ({ userId: user.id, roleId: r.id })),
+        data: roles.map((r: any) => ({ userId: user.id, roleId: r.id })),
         skipDuplicates: true
       });
     }
@@ -113,7 +112,7 @@ export class UsersService {
       if (input.roleKeys.length > 0) {
         const roles = await this.prisma.role.findMany({ where: { key: { in: input.roleKeys } } });
         await this.prisma.userRole.createMany({
-          data: roles.map((role) => ({ userId: id, roleId: role.id })),
+          data: roles.map((role: any) => ({ userId: id, roleId: role.id })),
           skipDuplicates: true
         });
       }

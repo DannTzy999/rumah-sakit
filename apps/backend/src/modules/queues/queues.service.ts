@@ -29,7 +29,7 @@ export class QueuesService {
 
   async list(query: PaginationQueryDto) {
     const { skip, take, page, limit } = toSkipTake(query.page, query.limit);
-    const where: Prisma.QueueEntryWhereInput | undefined = query.q
+    const where: any = query.q
       ? {
           OR: [
             { patient: { name: { contains: query.q, mode: "insensitive" as const } } },

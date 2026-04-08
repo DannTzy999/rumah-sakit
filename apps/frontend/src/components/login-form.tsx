@@ -29,7 +29,10 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
   const router = useRouter();
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
-    defaultValues: { email: "admin@simrs.local", password: "Admin123!" }
+    defaultValues: { 
+      email: "admin@simrs.local", 
+      password: "Admin123!"
+    }
   });
 
   const loginMutation = useMutation({
@@ -45,12 +48,16 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
     }
   });
 
+  const handleSubmit = (values: FormValues) => {
+    loginMutation.mutate(values);
+  };
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card className="overflow-hidden border-border/70 shadow-sm">
         <CardContent className="grid p-0 md:grid-cols-2">
           <Form {...form}>
-            <form className="p-6 md:p-8" onSubmit={form.handleSubmit((values) => loginMutation.mutate(values))}>
+            <form className="p-6 md:p-8" onSubmit={form.handleSubmit(handleSubmit)}>
               <div className="flex flex-col gap-6">
                 <div className="flex flex-col items-center text-center">
                   <h1 className="text-2xl font-bold">Login Staff</h1>
