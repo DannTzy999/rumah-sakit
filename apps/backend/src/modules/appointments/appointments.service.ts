@@ -1,3 +1,4 @@
+// Fixed AppointmentStatus import for Vercel build
 import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { Prisma, AppointmentStatus } from "@prisma/client";
 
