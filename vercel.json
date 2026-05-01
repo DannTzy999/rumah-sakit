@@ -5,7 +5,7 @@
       "src": "apps/backend/api/index.js",
       "use": "@vercel/node",
       "config": {
-        "includeFiles": ["apps/backend/dist/**"]
+        "includeFiles": ["apps/backend/dist/**/*"]
       }
     }
   ],
