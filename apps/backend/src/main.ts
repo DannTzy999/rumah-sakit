@@ -12,8 +12,7 @@ import { AppModule } from "./app.module";
 import { GlobalExceptionFilter } from "./common/http/global-exception.filter";
 import { ResponseInterceptor } from "./common/http/response.interceptor";
 
-async function bootstrap() {
-  const logger = new Logger("Bootstrap");
+export async function createNestApp() {
   const app = await NestFactory.create(AppModule, { cors: false });
   const config = app.get(ConfigService);
   app.enableShutdownHooks();
@@ -56,11 +55,22 @@ async function bootstrap() {
     swaggerOptions: { persistAuthorization: true }
   });
 
-  const port = config.get<number>("PORT", 4000);
-  await app.listen(port);
-  logger.log(`API listening on http://localhost:${port}/v1`);
-  logger.log(`Swagger on http://localhost:${port}/${swaggerPath}`);
+  await app.init();
+  return app;
 }
 
-bootstrap();
+export async function bootstrap() {
+  const logger = new Logger("Bootstrap");
+  const app = await createNestApp();
+  const config = app.get(ConfigService);
+  const port = config.get<number>("PORT", 4000);
+  await app.listen(port);
+
+  logger.log(`API listening on http://localhost:${port}/v1`);
+  logger.log(`Swagger on http://localhost:${port}/${config.get<string>("SWAGGER_PATH", "docs")}`);
+}
+
+if (require.main === module) {
+  bootstrap();
+}
 
