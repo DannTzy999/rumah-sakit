@@ -1,5 +1,6 @@
 {
   "version": 2,
+  "buildCommand": "pnpm --filter @simrs/backend build",
   "builds": [
     {
       "src": "apps/backend/api/index.js",
