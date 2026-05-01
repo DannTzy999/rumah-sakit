@@ -14,7 +14,6 @@
     "start": "turbo run start",
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
-    "postinstall": "node -e \"if (process.env.VERCEL === '1') require('child_process').execSync('pnpm --filter @simrs/backend build', { stdio: 'inherit' })\"",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "db:generate": "pnpm --filter @simrs/db db:generate",
