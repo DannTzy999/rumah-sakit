@@ -130,7 +130,7 @@ export default function AdminPage() {
                     <FormItem>
                       <FormLabel>Email</FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Input {...field} autoComplete="off" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -156,7 +156,7 @@ export default function AdminPage() {
                     <FormItem>
                       <FormLabel>Password</FormLabel>
                       <FormControl>
-                        <Input type="password" {...field} />
+                        <Input type="password" {...field} autoComplete="new-password" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

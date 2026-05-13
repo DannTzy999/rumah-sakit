@@ -1,5 +1,6 @@
 {
   "version": 2,
+  "buildCommand": "pnpm build",
   "builds": [
     {
       "src": "api/index.js",
@@ -11,7 +12,7 @@
   ],
   "routes": [
     {
-      "src": "/(.*)",
+      "src": "(.*)",
       "dest": "/api/index.js"
     }
   ]

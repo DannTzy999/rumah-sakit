@@ -29,7 +29,7 @@ export function PatientLoginForm({ className, ...props }: React.ComponentProps<"
   const router = useRouter();
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
-    defaultValues: { email: "pasien.andi@simrs.local", password: "Admin123!" }
+    defaultValues: { email: "", password: "" }
   });
 
   const loginMutation = useMutation({
@@ -71,7 +71,7 @@ export function PatientLoginForm({ className, ...props }: React.ComponentProps<"
                     <FormItem className="grid gap-2 text-left">
                       <FormLabel htmlFor="patient-email">Email</FormLabel>
                       <FormControl>
-                        <Input id="patient-email" type="email" placeholder="pasien.andi@simrs.local" {...field} />
+                        <Input id="patient-email" type="email" {...field} autoComplete="off" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -85,7 +85,7 @@ export function PatientLoginForm({ className, ...props }: React.ComponentProps<"
                     <FormItem className="grid gap-2 text-left">
                       <FormLabel htmlFor="patient-password">Password</FormLabel>
                       <FormControl>
-                        <Input id="patient-password" type="password" {...field} />
+                        <Input id="patient-password" type="password" {...field} autoComplete="new-password" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

@@ -30,8 +30,8 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues: { 
-      email: "admin@simrs.local", 
-      password: "Admin123!"
+      email: "", 
+      password: ""
     }
   });
 
@@ -73,7 +73,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
                     <FormItem className="grid gap-2 text-left">
                       <FormLabel htmlFor="staff-email">Email</FormLabel>
                       <FormControl>
-                        <Input id="staff-email" type="email" placeholder="admin@simrs.local" {...field} />
+                        <Input id="staff-email" type="email" {...field} autoComplete="off" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -87,7 +87,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
                     <FormItem className="grid gap-2 text-left">
                       <FormLabel htmlFor="staff-password">Password</FormLabel>
                       <FormControl>
-                        <Input id="staff-password" type="password" {...field} />
+                        <Input id="staff-password" type="password" {...field} autoComplete="new-password" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

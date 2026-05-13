@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "buildCommand": "pnpm --filter @simrs/backend build",
+  "builds": [
+    {
+      "src": "apps/backend/api/index.js",
+      "use": "@vercel/node",
+      "config": {
+        "includeFiles": ["apps/backend/dist/**"]
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "(.*)",
+      "dest": "/apps/backend/api/index.js"
+    }
+  ]
+}
